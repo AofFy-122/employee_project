@@ -218,7 +218,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       innerColor: primary,
                       key: key,
                       onSubmit: () async {
-                        Timer(Duration(seconds: 1),() {
+                        Future.delayed(Duration(milliseconds: 500), () {
                           key.currentState!.reset();
                         });
 
@@ -264,6 +264,7 @@ class _TodayScreenState extends State<TodayScreen> {
                           .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
                           .set({
                             "checkIn" : DateFormat('hh:mm').format(DateTime.now()),
+                            "checkOut" : "--/--"
                           });
                         }
 
