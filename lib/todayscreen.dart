@@ -218,9 +218,6 @@ class _TodayScreenState extends State<TodayScreen> {
                       innerColor: primary,
                       key: key,
                       onSubmit: () async {
-                        Future.delayed(Duration(milliseconds: 500), () {
-                          key.currentState!.reset();
-                        });
 
                         QuerySnapshot snap = await FirebaseFirestore
                           .instance.collection("Employee")
@@ -263,11 +260,13 @@ class _TodayScreenState extends State<TodayScreen> {
                           .collection("Record")
                           .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
                           .set({
+                            "date" : Timestamp.now(),
                             "checkIn" : DateFormat('hh:mm').format(DateTime.now()),
                             "checkOut" : "--/--"
                           });
                         }
 
+                        key.currentState!.reset();
                       },
                     );
                   },

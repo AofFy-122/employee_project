@@ -53,9 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: currentIndex,
         children: [
-          CalendarScreen(),
-          TodayScreen(),
-          ProfileScreen(),
+          new CalendarScreen(),
+          new TodayScreen(),
+          new ProfileScreen(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: const EdgeInsets.only(
           left: 12,
           right: 12,
-          bottom: 24,
+          bottom: 12,
         ),
         decoration: const BoxDecoration(
           color: Colors.white,

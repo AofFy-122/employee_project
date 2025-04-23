@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:employee_project/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -14,6 +15,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   double screenHeight = 0;
   double screenWidth = 0;
   Color primary = const Color.fromARGB(250, 5, 104, 253);
+
+  String _month = DateFormat('MMMM').format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(top: 32),
                   child: Text(
-                    DateFormat('MMMM').format(DateTime.now()),
+                    _month,
                     style: TextStyle(
                       fontFamily: "Nexa Blod",
                       fontSize: screenWidth / 18,
@@ -53,29 +56,71 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   margin: const EdgeInsets.only(top: 32),
-                  child: Text(
-                    "Pick a Month",
-                    style: TextStyle(
-                      fontFamily: "Nexa Blod",
-                      fontSize: screenWidth / 18,
-                    ),  
+                  child: GestureDetector(
+                    onTap: () async{
+                      final month = await showMonthYearPicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2022), 
+                        lastDate: DateTime(2099),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: primary,
+                                secondary: primary,
+                                onSecondary: Colors.white,
+                              ),
+                              textButtonTheme: TextButtonThemeData(
+                                style: TextButton.styleFrom(
+                                  foregroundColor: primary,
+                                ),
+                              ),
+                              textTheme: const TextTheme(
+                                headlineMedium: TextStyle(
+                                  fontFamily: "Nexa Bold",
+                                ),
+                              ),
+                            ), 
+                            child: child!
+                          );
+                        }
+                      );
+
+                      if(month != null){
+                        setState(() {
+                          _month = DateFormat('MMMM').format(month);
+                        });
+                      }
+                    },
+                    child: Text(
+                      "Pick a Month",
+                      style: TextStyle(
+                        fontFamily: "Nexa Blod",
+                        fontSize: screenWidth / 18,
+                      ),  
+                    ),
                   ),
                 ),
               ],
             ),
-            Container(
-              height: screenHeight - screenHeight /5,
+            SizedBox(
+              height: screenHeight / 1.35,
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection("Employee").doc(User.id).collection("Record").snapshots(), 
+                stream: FirebaseFirestore.instance
+                  .collection("Employee")
+                  .doc(User.id)
+                  .collection("Record")
+                  .snapshots(), 
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if(snapshot.hasData){
                     final snap = snapshot.data!.docs;
                     return ListView.builder(
                       itemCount: snap.length,
                       itemBuilder: (context, index){
-                        return Container(
+                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ? Container(
                           height: 150,
-                          margin: const EdgeInsets.only(top: 12,left: 6,right: 6),
+                          margin: EdgeInsets.only(top: index > 0 ? 12 : 0,left: 6,right: 6),
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
@@ -91,6 +136,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(),
+                                  decoration: BoxDecoration(
+                                    color: primary,
+                                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      DateFormat('EE\ndd').format(snap[index]['date'].toDate()),
+                                      style: TextStyle(
+                                        fontFamily: "Nexa Bold",
+                                        fontSize: screenWidth / 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ),
                               Expanded(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +201,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                             ],
                           ),
-                        );
+                        ) : const SizedBox();
                       },
                     );
                   }else {

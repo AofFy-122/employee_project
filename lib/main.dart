@@ -4,6 +4,7 @@ import 'package:employee_project/model/user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future <void> main() async {
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
       home: const KeyboardVisibilityProvider(
         child: AuthCheck(),
       ),
+      localizationsDelegates: const [
+        MonthYearPickerLocalizations.delegate,
+      ],
     );
   }
 }
