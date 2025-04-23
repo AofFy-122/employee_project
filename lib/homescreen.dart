@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:employee_project/calendarscreen.dart';
 import 'package:employee_project/model/user.dart';
 import 'package:employee_project/profilescreen.dart';
+import 'package:employee_project/services/location_service.dart';
 import 'package:employee_project/todayscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +34,25 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getId();
+    _startLocationService();
+  }
+
+  void _startLocationService() async {
+    LocationService().initialize();
+
+    LocationService().getLongitude().then((value) {
+      setState(() {
+        User.long = value!;
+      });
+
+      LocationService().getLatitude().then((value) {
+        setState(() {
+          User.lat = value!;
+        });
+      });
+    });
+
+   
   }
 
   void getId() async{
