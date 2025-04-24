@@ -96,19 +96,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             const SizedBox(height: 24,),
-            textField("First Name","First name",firstNameController),
-            textField("Last Name","Last name",lastNameController),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Date of Birth",
-                style: TextStyle(
-                  fontFamily: "Nexa Bold",
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            GestureDetector(
+            User.canEdit ? textField("First Name","First name",firstNameController) : field("First Name",User.firstName),
+            User.canEdit ? textField("Last Name","Last name",lastNameController) : field("Last Name", User.lastName),
+            
+            User.canEdit ? GestureDetector(
               onTap: () {
                 showDatePicker(
                   context: context, 
@@ -143,32 +134,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   })
                 });
               },
-              child: Container(
-                height: kToolbarHeight,
-                width: screenWidth,
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: EdgeInsets.only(left: 11,),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border:  Border.all(
-                    color: Colors.black54,
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    birth,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontFamily: "Nexa Bold",
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            textField("Address","Address",addressController),
-            GestureDetector(
+              child: field("Date of Birth", birth),
+            ) : field("Date of Birth", User.birthDate),
+            User.canEdit ? textField("Address","Address",addressController) : field("Address", User.address),
+            User.canEdit ? GestureDetector(
               onTap: () async{
                 String firstName = firstNameController.text;
                 String lastName = lastNameController.text;
@@ -191,6 +160,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       'birthDate' : birthDate,
                       'address' : address,
                       'canEdit' : false,
+                    }).then((value) {
+                      setState(() {
+                        User.canEdit = false;
+                        User.firstName = firstName;
+                        User.lastName = lastName;
+                        User.birthDate = birthDate;
+                        User.address = address;
+                      });
                     });
                   }
                 }else {
@@ -216,13 +193,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-            ),
+            ) : const SizedBox(),
           ],
         ),
       ),
     );
   }
 
+  Widget field (String title,String text) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontFamily: "Nexa Bold",
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        Container(
+          height: kToolbarHeight,
+          width: screenWidth,
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: EdgeInsets.only(left: 11,),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            border:  Border.all(
+              color: Colors.black54,
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.black54,
+                fontFamily: "Nexa Bold",
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
 
   Widget textField(String title,String hint,TextEditingController controller) {
