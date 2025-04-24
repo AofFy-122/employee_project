@@ -30,11 +30,17 @@ class LocationService {
 
   Future<double?> getLatitude() async{
     _locData = await location.getLocation();
+    if(_locData.latitude == null || _locData.latitude == 0.0){
+      return null;
+    }
     return _locData.latitude;
   }
 
   Future<double?> getLongitude() async{
     _locData = await location.getLocation();
+    if(_locData.longitude == null || _locData.longitude == 0.0){
+      return null;
+    }
     return _locData.longitude;
   }
 }

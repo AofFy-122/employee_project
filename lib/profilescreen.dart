@@ -8,11 +8,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  double screenHeight = 0;
+  double screenWidth = 0;
+  Color primary = const Color.fromARGB(250, 5, 104, 253);
+
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Center(
-        child: Text("Profile"),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Text("Profile"),
+        ),
       ),
     );
   }

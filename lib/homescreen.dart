@@ -6,7 +6,7 @@ import 'package:employee_project/services/location_service.dart';
 import 'package:employee_project/todayscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geocoding/geocoding.dart';
+//import 'package:geocoding/geocoding.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -38,7 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startLocationService() async {
-    LocationService().initialize();
+    final locationService = LocationService();
+    await locationService.initialize();
+
 
     LocationService().getLongitude().then((value) {
       setState(() {
