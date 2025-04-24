@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double screenWidth = 0;
   Color primary = const Color.fromARGB(250, 5, 104, 253);
 
-  int currentIndex = 2;
+  int currentIndex = 1;
 
   List<IconData> navigationIcons = [
     FontAwesomeIcons.calendarDays,
@@ -33,20 +33,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getId();
     _startLocationService();
-    _getCredentials();
+    getId().then((value) {
+      _getCredentials();
+      _getProfilePic();
+    });
   }
 
+
   void _getCredentials() async{
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance.collection("Employee").doc(User.id).get();
+
+      setState(() {
+        User.canEdit = doc['canEdit'];
+        User.firstName = doc['firstName'];
+        User.lastName = doc['lastName'];
+        User.birthDate = doc['birthDate'];
+        User.address = doc['address'];
+      });
+    } catch (e) {
+      return;
+    }
+  }
+
+  void _getProfilePic() async{
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection("Employee").doc(User.id).get();
 
     setState(() {
-      User.canEdit = doc['canEdit'];
-      User.firstName = doc['firstName'];
-      User.lastName = doc['lastName'];
-      User.birthDate = doc['birthDate'];
-      User.address = doc['address'];
+      User.profilePicLink = doc['profilePic'];
     });
   }
 
@@ -70,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
    
   }
 
-  void getId() async{
+  Future<void> getId() async{
     QuerySnapshot snap = await FirebaseFirestore.instance
       .collection("Employee")
       .where('id', isEqualTo: User.employeeId)

@@ -39,9 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     
     await ref.putFile(File(image!.path));
 
-    ref.getDownloadURL().then((value) {
+    ref.getDownloadURL().then((value) async{
       setState(() {
         User.profilePicLink = value;
+      });
+
+      await FirebaseFirestore.instance.collection("Employee").doc(User.id).update({
+      'profilePic' : value,
       });
     });
 
@@ -74,7 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icons.person,
                     color: Colors.white,
                     size: 80,
-                  ) : Image.network(User.profilePicLink),
+                  ) : ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(User.profilePicLink),
+                    ),
                 ),
               ),
             ),
