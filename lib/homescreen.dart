@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double screenWidth = 0;
   Color primary = const Color.fromARGB(250, 5, 104, 253);
 
-  int currentIndex = 1;
+  int currentIndex = 2;
 
   List<IconData> navigationIcons = [
     FontAwesomeIcons.calendarDays,

@@ -20,8 +20,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
-        child: Center(
-          child: Text("Profile"),
+        child: Column(
+          children: [
+            Container(
+              height: 120,
+              width: 120,
+            ),
+          ],
         ),
       ),
     );
