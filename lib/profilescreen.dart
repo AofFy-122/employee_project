@@ -193,7 +193,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-            ) : const SizedBox(),
+            ) : GestureDetector(
+              onTap: () {
+                setState(() {
+                  User.canEdit = true;
+                });
+              },
+              child: Container(
+                    height: kToolbarHeight,
+                    width: screenWidth,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: primary,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Edit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Nexa Bold",
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
+              
           ],
         ),
       ),
